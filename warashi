@@ -1,3 +1,0 @@
-#!/bin/sh
-
-sbcl --script ./warashi-exec.lisp $@
