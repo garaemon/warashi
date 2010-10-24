@@ -6,7 +6,7 @@
 (in-package :warashi)
 
 (defun package->rsts (package outputdir)
-  "generate reStructedTexts from a package.
+  "generate reStructuredTexts from a package.
 
  example::
 
