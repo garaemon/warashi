@@ -15,11 +15,13 @@
   ;; verificate outputdir exists or not
   (unless (probe-directory outputdir)
     (error "~A is not a directory" outputdir))
-  (if sphinx-conf-py
-      (warn "sorry, currently :sphinx-conf-py not supported"))
+  
   ;; force to use pathname
   (let ((outputdir (if (pathnamep outputdir)
                        outputdir (pathname outputdir))))
+    (if sphinx-conf-py
+        (let ((sphinx-conf (merge-pathnames "conf.py" outputdir)))
+          (generate-sphinx-conf-py sphinx-conf package)))
     (let ((top-rst (merge-pathnames "top.rst" outputdir))
           (functions-rst (merge-pathnames "functions.rst" outputdir))
           (macros-rst (merge-pathnames "macros.rst" outputdir))

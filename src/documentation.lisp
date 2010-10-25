@@ -4,8 +4,38 @@
 
 (in-package :warashi)
 
-;; for function
-;; (documentation sym 'function)
+(defun generate-sphinx-conf-py (target package
+                                &key
+                                (developer nil)
+                                (version nil))
+  (with-open-file (f target :direction :output :if-exists :supersede)
+    (format f "
+import sys, os
+extensions = []
+
+templates_path = ['_templates']
+source_suffix = '.rst'
+master_doc = 'top'
+project = u'~A'
+copyright = u'~A'
+version = '0'
+release = '0'
+
+exclude_patterns = ['_build']
+pygments_style = 'sphinx'
+html_theme = 'default'
+html_static_path = ['_static']
+htmlhelp_basename = 'doc'
+latex_documents = [
+  ('index', '~A.tex', u'~A Documentation',
+   u'~A', 'manual'),
+]
+man_pages = [
+    ('index', '~A', u'~A Documentation',
+     [u'~A'], 1)
+]
+"
+            package package package package package package package package)))
 
 (defun generate-top-documentation (rst-file)
   (with-open-file (f rst-file :direction :output :if-exists :supersede)
@@ -144,4 +174,3 @@ internal variables
             (format ss "~A~%" (documentation v 'cl:variable))
             (format ss "~%"))))
     (get-output-stream-string ss)))
-
