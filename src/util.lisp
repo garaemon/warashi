@@ -28,3 +28,7 @@
                               (format nil "~A" list)
                               " "))
 
+(defun lambda-list (fun)
+  "take a lambda-list of a function object"
+  #+sbcl
+  (SB-KERNEL:%FUN-LAMBDA-LIST fun))

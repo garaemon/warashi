@@ -35,62 +35,59 @@
             (push s ret))))
     (reverse ret)))
 
+(defun enumerate-symbols (package
+                          enumerate-function
+                          &key
+                          (filter nil))
+  (let ((syms (funcall enumerate-function package)))
+    (if filter
+        (remove-if-not filter syms)
+        syms)))
+
 (defun enumerate-all-variables (package)
   "enumerate the all variables defined in package"
-  (let ((all-symbols (enumerate-all-symbols package)))
-    (remove-if-not #'boundp all-symbols)))
+  (enumerate-symbols package #'enumerate-all-symbols :filter #'boundp))
 
 (defun enumerate-external-variables (package)
   "enumerate the all external variables defined in package"
-  (let ((external-symbols (enumerate-external-symbols package)))
-    (remove-if-not #'boundp external-symbols)))
+  (enumerate-symbols package #'enumerate-external-macros :filter #'boundp))
 
 (defun enumerate-internal-variables (package)
   "enumerate the all internal variables defined in package"
-  (let ((internal-symbols (enumerate-internal-symbols package)))
-    (remove-if-not #'boundp #'internal-symbols)))
+  (enumerate-symbols package #'enumerate-internal-macros :filter #'boundp))
 
 (defun enumerate-all-functions (package)
   "enumerate the all functions defined in package"
-  (let ((all-symbols (enumerate-all-symbols package)))
-    (remove-if-not #'(lambda (s)
-                       (and (fboundp s) (not (macro-function s))))
-                   all-symbols)))
+  (enumerate-symbols package #'enumerate-all-symbols
+                     :filter #'(lambda (s)
+                                 (and (fboundp s) (not (macro-function s))))))
 
 (defun enumerate-external-functions (package)
   "enumerate the all external variables defined in package"
-  (let ((external-symbols (enumerate-external-symbols package)))
-    (remove-if-not #'(lambda (s)
-                         (and (fboundp s) (not (macro-function s))))
-                   external-symbols)))
+  (enumerate-symbols package #'enumerate-external-symbols
+                     :filter #'(lambda (s)
+                                 (and (fboundp s) (not (macro-function s))))))
 
 (defun enumerate-internal-functions (package)
   "enumerate the all internal variabled defined in package"
-  (let ((internal-symbols (enumerate-internal-symbols package)))
-    (remove-if-not #'(lambda (s)
-                       (and (fboundp s) (not (macro-function s))))
-                   internal-symbols)))
+  (enumerate-symbols package #'enumerate-internal-symbols
+                     :filter #'(lambda (s)
+                                 (and (fboundp s) (not (macro-function s))))))
 
 (defun enumerate-all-macros (package)
   "enumerate the all macrod defined in package"
-  (let ((all-symbols (enumerate-all-symbols package)))
-    (remove-if-not
-     #'(lambda (s)
-         (and (fboundp s) (macro-function s)))
-     all-symbols)))
+  (enumerate-symbols package #'enumerate-all-symbols
+                     :filter #'(lambda (s)
+                                 (and (fboundp s) (macro-function s)))))
 
 (defun enumerate-external-macros (package)
   "enumerate the all external macrod defined in package"
-  (let ((external-symbols (enumerate-external-symbols package)))
-    (remove-if-not
-     #'(lambda (s)
-         (and (fboundp s) (macro-function s)))
-     external-symbols)))
+  (enumerate-symbols package #'enumerate-external-symbols
+                     :filter #'(lambda (s)
+                                 (and (fboundp s) (macro-function s)))))
 
 (defun enumerate-internal-macros (package)
   "enumerate the all internal macrod defined in package"
-  (let ((internal-symbols (enumerate-internal-symbols package)))
-    (remove-if-not
-     #'(lambda (s)
-         (and (fboundp s) (macro-function s)))
-     internal-symbols)))
+  (enumerate-symbols package #'enumerate-internal-symbols
+                     :filter #'(lambda (s)
+                                 (and (fboundp s) (macro-function s)))))

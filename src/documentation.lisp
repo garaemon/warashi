@@ -40,16 +40,53 @@ internal functions
             (generate-external-functions-documentation package)
             (generate-internal-functions-documentation package))))
 
+(defun generate-macros-documentation (rst-file package)
+  (with-open-file (f rst-file :direction :output :if-exists :supersede)
+    (format f "======
+macros
+======
+
+external macros
+---------------
+
+~A
+
+internal macros
+---------------
+
+~A
+"
+            (generate-external-macros-documentation package)
+            (generate-internal-macros-documentation package))))
+
+
+(defun generate-variables-documentation (rst-file package)
+  (with-open-file (f rst-file :direction :output :if-exists :supersede)
+    (format f "=========
+variables
+=========
+
+external variables
+------------------
+
+~A
+
+internal variables
+------------------
+
+~A
+"
+            (generate-external-variables-documentation package)
+            (generate-internal-variables-documentation package))))
+
 (defun generate-external-functions-documentation (package)
   (let ((ss (make-string-output-stream)))
     (let ((functions (enumerate-external-functions package)))
       (dolist (f functions)
         (format ss "~%* ~A *~A* ~%~%" (symbol-name f)
-                (list->string
-                 (SB-KERNEL:%FUN-LAMBDA-LIST (symbol-function f))))
+                (list->string (lambda-list (symbol-function f))))
         (if (documentation f 'function)
-            (format ss " ~A~%"
-                    (documentation f 'cl:function))
+            (format ss " ~A~%" (documentation f 'cl:function))
           (format ss "~%"))))
     (get-output-stream-string ss)))
 
@@ -59,12 +96,52 @@ internal functions
       (dolist (f functions)
         (format ss "~%* ~A *~A*~%~%"
                 (symbol-name f)
-                (list->string
-                 (SB-KERNEL:%FUN-LAMBDA-LIST (symbol-function f))))
+                (list->string (lambda-list (symbol-function f))))
         (if (documentation f 'function)
-            (format ss " ~A~%" 
-                    (documentation f 'cl:function))
+            (format ss " ~A~%" (documentation f 'cl:function))
           (format ss "~%"))))
     (get-output-stream-string ss)))
 
+(defun generate-external-macros-documentation (package)
+  (let ((ss (make-string-output-stream)))
+    (let ((functions (enumerate-external-macros package)))
+      (dolist (f functions)
+        (format ss "~%* ~A *~A* ~%~%" (symbol-name f)
+                (list->string (lambda-list (symbol-function f))))
+        (if (documentation f 'function)
+            (format ss " ~A~%" (documentation f 'cl:function))
+          (format ss "~%"))))
+    (get-output-stream-string ss)))
+
+(defun generate-internal-macros-documentation (package)
+  (let ((ss (make-string-output-stream)))
+    (let ((functions (enumerate-internal-macros package)))
+      (dolist (f functions)
+        (format ss "~%* ~A *~A*~%~%"
+                (symbol-name f)
+                (list->string (lambda-list (symbol-function f))))
+        (if (documentation f 'cl:function)
+            (format ss " ~A~%" (documentation f 'cl:function))
+          (format ss "~%"))))
+    (get-output-stream-string ss)))
+
+(defun generate-external-variables-documentation (package)
+  (let ((ss (make-string-output-stream)))
+    (let ((variables (enumerate-external-variables package)))
+      (dolist (v variables)
+        (format ss "~%* ~A~%~%" (symbol-name v))
+        (if (documentation v 'cl:variable)
+            (format ss "~A~%" (documentation v 'cl:variable))
+            (format ss "~%"))))
+    (get-output-stream-string ss)))
+
+(defun generate-internal-variables-documentation (package)
+  (let ((ss (make-string-output-stream)))
+    (let ((variables (enumerate-internal-variables package)))
+      (dolist (v variables)
+        (format ss "~%* ~A~%~%" (symbol-name v))
+        (if (documentation v 'cl:variable)
+            (format ss "~A~%" (documentation v 'cl:variable))
+            (format ss "~%"))))
+    (get-output-stream-string ss)))
 
