@@ -37,11 +37,14 @@ man_pages = [
 "
             package package package package package package package package)))
 
-(defun generate-top-documentation (rst-file)
-  (with-open-file (f rst-file :direction :output :if-exists :supersede)
-    (format f "===
-top
-===
+(defun generate-top-documentation (rst-file package)
+  (let* ((package-name (symbol-name package))
+         (title-syntax (make-string (length package-name)
+                                    :initial-element #\=)))
+    (with-open-file (f rst-file :direction :output :if-exists :supersede)
+      (format f "~A
+~A
+~A
 
 .. toctree::
     :maxdepth: 2
@@ -49,7 +52,7 @@ top
     functions
     macros
     variables
-")))
+" title-syntax package-name title-syntax))))
 
 (defun generate-functions-documentation (rst-file package)
   (with-open-file (f rst-file :direction :output :if-exists :supersede)

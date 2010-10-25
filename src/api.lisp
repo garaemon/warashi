@@ -26,7 +26,7 @@
           (functions-rst (merge-pathnames "functions.rst" outputdir))
           (macros-rst (merge-pathnames "macros.rst" outputdir))
           (variables-rst (merge-pathnames "variables.rst" outputdir)))
-      (generate-top-documentation top-rst)
+      (generate-top-documentation top-rst package)
       (generate-functions-documentation functions-rst package)
       (generate-macros-documentation macros-rst package)
       (generate-variables-documentation variables-rst package)
