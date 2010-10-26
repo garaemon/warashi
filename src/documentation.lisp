@@ -40,7 +40,7 @@ man_pages = [
             (if version version "0")
             package package package package package package)))
 
-(defun generate-top-documentation (rst-file package)
+(defun generate-top-documentation (rst-file package appendix-rst)
   "generate a rst file for top page."
   (let* ((package-name (symbol-name package))
          (title-syntax (make-string (length package-name)
@@ -56,7 +56,10 @@ man_pages = [
     functions
     macros
     variables
-" title-syntax package-name title-syntax))))
+" title-syntax package-name title-syntax)
+      (if appendix-rst
+          (dolist (rst appendix-rst)
+            (format f "    ~A~%" rst))))))
 
 (defun generate-functions-documentation (rst-file package)
   "generate a rst file describing the functions defined in the

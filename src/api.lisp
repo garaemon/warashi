@@ -6,7 +6,8 @@
 (in-package :warashi)
 
 (defun package->rsts (package outputdir
-                      &key (sphinx-conf-py nil))
+                      &key (sphinx-conf-py nil)
+                           (appendix-rst nil))
   "generate reStructuredTexts from a package.
 
  example::
@@ -26,7 +27,7 @@
           (functions-rst (merge-pathnames "functions.rst" outputdir))
           (macros-rst (merge-pathnames "macros.rst" outputdir))
           (variables-rst (merge-pathnames "variables.rst" outputdir)))
-      (generate-top-documentation top-rst package)
+      (generate-top-documentation top-rst package appendix-rst)
       (generate-functions-documentation functions-rst package)
       (generate-macros-documentation macros-rst package)
       (generate-variables-documentation variables-rst package)
