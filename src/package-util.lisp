@@ -39,6 +39,8 @@
                           enumerate-function
                           &key
                           (filter nil))
+  "this is a utility function to define enumerate some kind of symbols.
+"
   (let ((syms (funcall enumerate-function package)))
     (if filter
         (remove-if-not filter syms)
