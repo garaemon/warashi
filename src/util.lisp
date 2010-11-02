@@ -38,6 +38,6 @@ this function contracts the converted string does not has any newline."
 
  example::
 
- (lambda-list #'+) => (&REST SB-KERNEL::ARGS)"
+  (lambda-list #'+) => (&REST SB-KERNEL::ARGS)"
   #+sbcl
-  (SB-KERNEL:%FUN-LAMBDA-LIST fun))
+  (SB-KERNEL:%simple-fun-arglist fun))

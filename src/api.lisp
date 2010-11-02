@@ -9,15 +9,18 @@
                       &key (sphinx-conf-py nil)
                            (appendix-rst nil))
   "generate reStructuredTexts from a package.
-
- example::
+if you call package->rsts with :sphinx-conf-py t, conf.py required by
+sphinx is generated.
+and, if you call it with :appendix-rst, this function will add rst files to
+top.rst.
+example::
 
   (package->rsts :warashi \"tmp\")"
   ;; verificate outputdir exists or not
   (unless (probe-directory outputdir)
     (error "~A is not a directory" outputdir))
   
-  ;; force to use pathname
+  ;; force to use pathname instead of string
   (let ((outputdir (if (pathnamep outputdir)
                        outputdir (pathname outputdir))))
     (if sphinx-conf-py

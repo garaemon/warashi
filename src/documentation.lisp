@@ -12,7 +12,7 @@
   (with-open-file (f target :direction :output :if-exists :supersede)
     (format f "
 import sys, os
-extensions = []
+extensions = ['sphinx.ext.pngmath']
 
 templates_path = ['_templates']
 source_suffix = '.rst'
@@ -59,7 +59,8 @@ man_pages = [
 " title-syntax package-name title-syntax)
       (if appendix-rst
           (dolist (rst appendix-rst)
-            (format f "    ~A~%" rst))))))
+            (format f "    ~A~%" rst)))
+      t)))
 
 (defun generate-functions-documentation (rst-file package)
   "generate a rst file describing the functions defined in the
@@ -130,7 +131,7 @@ with reStructuredText syntax"
   (let ((ss (make-string-output-stream)))
     (let ((functions (enumerate-external-functions package)))
       (dolist (f functions)
-        (format ss "~%* ~A *~A* ~%~%" (symbol-name f)
+        (format ss "~%* ~A *~A*~%" (symbol-name f)
                 (list->string (lambda-list (symbol-function f))))
         (if (documentation f 'function)
             (format ss " ~A~%" (add-space-to-string
@@ -144,7 +145,7 @@ with reStructuredText syntax"
   (let ((ss (make-string-output-stream)))
     (let ((functions (enumerate-internal-functions package)))
       (dolist (f functions)
-        (format ss "~%* ~A *~A*~%~%"
+        (format ss "~%* ~A *~A*~%"
                 (symbol-name f)
                 (list->string (lambda-list (symbol-function f))))
         (if (documentation f 'function)
@@ -159,7 +160,7 @@ with reStructuredText syntax"
   (let ((ss (make-string-output-stream)))
     (let ((functions (enumerate-external-macros package)))
       (dolist (f functions)
-        (format ss "~%* ~A *~A* ~%~%" (symbol-name f)
+        (format ss "~%* ~A *~A* ~%" (symbol-name f)
                 (list->string (lambda-list (symbol-function f))))
         (if (documentation f 'function)
             (format ss " ~A~%" (add-space-to-string
@@ -173,7 +174,7 @@ with reStructuredText syntax"
   (let ((ss (make-string-output-stream)))
     (let ((functions (enumerate-internal-macros package)))
       (dolist (f functions)
-        (format ss "~%* ~A *~A*~%~%"
+        (format ss "~%* ~A *~A*~%"
                 (symbol-name f)
                 (list->string
                  (lambda-list (symbol-function f))))
@@ -189,7 +190,7 @@ with reStructuredText syntax"
   (let ((ss (make-string-output-stream)))
     (let ((variables (enumerate-external-variables package)))
       (dolist (v variables)
-        (format ss "~%* ~A~%~%" (symbol-name v))
+        (format ss "~%* ~A~%" (symbol-name v))
         (if (documentation v 'cl:variable)
             (format ss "~A~%" (add-space-to-string
                                (documentation v 'cl:variable)))
@@ -202,7 +203,7 @@ with reStructuredText syntax"
   (let ((ss (make-string-output-stream)))
     (let ((variables (enumerate-internal-variables package)))
       (dolist (v variables)
-        (format ss "~%* ~A~%~%" (symbol-name v))
+        (format ss "~%* ~A~%" (symbol-name v))
         (if (documentation v 'cl:variable)
             (format ss "~A~%" (add-space-to-string
                                (documentation v 'cl:variable)))
